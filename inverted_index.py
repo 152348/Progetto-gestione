@@ -1,4 +1,4 @@
-from whoosh.fields import Schema, TEXT, KEYWORD, ID, STORED
+from whoosh.fields import Schema, TEXT, ID, STORED
 from whoosh.analysis import StemmingAnalyzer
 import os, os.path
 from whoosh import index
