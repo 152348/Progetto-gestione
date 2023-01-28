@@ -49,7 +49,6 @@ class Inverted_index():
                 break_counter = 0
                 df = csv.DictReader(rev)
                 for row in range(csv_counter):
-                    print(row)
                     next(df)
                 for line in df:
                     writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'], _stored_review=line['Text'])
