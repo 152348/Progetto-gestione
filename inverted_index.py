@@ -28,8 +28,8 @@ class Inverted_index():
     def index_documents(self, n_break=-1):
         """Metodo che si occupa di indicizzare i documenti contenuti nel file csv Reviews_MAL.csv. Essendo
         un'operazione lunga, è possibile passare come parametro il numero di documenti da indicizzare
-        per questa iterazione del metodo. Il metodo non riparte ogni volta dalla prima recensione ma salva 
-        in un file a quale recensione era arrivato."""
+        per questa iterazione del metodo (oppure -1 per indicizzarli tutti in una volta). Il metodo non 
+        riparte ogni volta dalla prima recensione ma salva in un file a quale recensione era arrivato."""
         if not os.path.exists(self._index_dir):
             print("La cartella dell'indice non esiste, esegui prima create_index")
         else:
