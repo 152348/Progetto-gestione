@@ -4,6 +4,7 @@ import os, os.path
 from whoosh import index
 import csv
 from whoosh.qparser import MultifieldParser
+from whoosh import qparser
 
 class Inverted_index():
 
@@ -66,12 +67,13 @@ class Inverted_index():
            stampare i risultati"""
         ix = index.open_dir(self._index_dir)
         with ix.searcher() as s:
-            parser = MultifieldParser(['title', 'user', 'review', 'sentiment'], schema = Inverted_index.schema)
+            og = qparser.OrGroup.factory(0.9)
+            parser = MultifieldParser(['title', 'user', 'review', 'sentiment'], schema = Inverted_index.schema, group = og)
             parsed_q = parser.parse(query)
-            results = s.search(parsed_q)
+            results = s.search(parsed_q, terms= True)
             if len(results) == 0:
                 print("No results found")
             else:
-                for result in results:
-                    print(result)
+                for hit in results:
+                    print(f"Title: {hit['title']}, User: {hit['user']}, Review: {hit['review']}\n")
 
