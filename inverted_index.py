@@ -5,13 +5,18 @@ from whoosh import index
 import csv
 from whoosh.qparser import MultifieldParser
 from whoosh import qparser
+from whoosh import scoring
+from sentiment import sentiment_analysis
+from whoosh.highlight import UppercaseFormatter
 
 class Inverted_index():
 
     schema = Schema(title=ID(stored=True),
                     user=ID(stored=True),
                     review=TEXT(analyzer=StemmingAnalyzer(), stored=True),
-                    sentiment=ID)
+                    sentiment_roberta=ID(stored=True),
+                    sentiment_amazon=ID(stored=True),
+                    sentiment_nltk=ID(stored=True))
                     
     def __init__(self, index_dir):
         """Inizializzatore a cui deve essere passato il nome della directory 
@@ -52,7 +57,10 @@ class Inverted_index():
                 for row in range(csv_counter):
                     next(df)
                 for line in df:
-                    writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'], _stored_review=line['Text'])
+                    sentiments = sentiment_analysis(line['Text'])
+                    writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'], 
+                    _stored_review=line['Text'], sentiment_roberta=sentiments[0], sentiment_amazon = sentiments[1],
+                    sentiment_nltk=sentiments[2])
                     csv_counter += 1
                     break_counter +=1
                     with open('csv_count.txt', 'w') as number:
@@ -68,12 +76,17 @@ class Inverted_index():
         ix = index.open_dir(self._index_dir)
         with ix.searcher() as s:
             og = qparser.OrGroup.factory(0.9)
-            parser = MultifieldParser(['title', 'user', 'review', 'sentiment'], schema = Inverted_index.schema, group = og)
+            parser = MultifieldParser(['title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk'],
+                schema = Inverted_index.schema, group = og)
             parsed_q = parser.parse(query)
             results = s.search(parsed_q, terms= True)
+            #results.formatter = UppercaseFormatter(between="\n")
             if len(results) == 0:
                 print("No results found")
             else:
                 for hit in results:
-                    print(f"Title: {hit['title']}, User: {hit['user']}, Review: {hit['review']}\n")
+                    print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
+                    f"{hit['sentiment_roberta']}-{hit['sentiment_amazon']}-{hit['sentiment_nltk']}, Review: {hit['review']}\n")
+                #for hit in results:
+                    #print(hit.highlights("review"))
 
