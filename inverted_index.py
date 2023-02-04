@@ -44,7 +44,7 @@ class Inverted_index():
         per questa iterazione del metodo (oppure -1 per indicizzarli tutti in una volta). Il metodo non 
         riparte ogni volta dalla prima recensione ma salva in un file a quale recensione era arrivato."""
         if not os.path.exists(self._index_dir):
-            print("La cartella dell'indice non esiste, esegui prima create_index")
+            print("The index doesn't exist, first you need to create one\n")
         else:
             ix = index.open_dir(self._index_dir)
             writer = ix.writer()
@@ -74,7 +74,7 @@ class Inverted_index():
                     break_counter +=1
                     with open('csv_count.txt', 'w') as number:
                         number.write(str(csv_counter))
-                    if break_counter != 1 and break_counter == n_break:
+                    if n_break != -1 and break_counter == n_break:
                         break
 
             writer.commit(optimize=True)
@@ -82,34 +82,37 @@ class Inverted_index():
     def search(self, query, m_choice):
         """Metodo che si occupa di parsare la query passata come parametro dall'utente, cercarla e
            stampare i risultati"""
-        ix = index.open_dir(self._index_dir)
-        with ix.searcher(weighting=Inverted_index.models[m_choice]) as s:
-            og = qparser.OrGroup.factory(0.9)
-            parser = MultifieldParser(
-                ['title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk'],
-                schema=Inverted_index.schema, group=og)
-            parsed_q = parser.parse(query)
-            numb_review = FieldFacet("number_reviews", reverse=True)
-            scores = ScoreFacet()
-            results = s.search(parsed_q, sortedby=[scores,numb_review])
-            # results.formatter = UppercaseFormatter(between="\n")
-            totale = len(results)
-            if totale == 0:
-                print("\nNo results found\n")
-            else:
-                count = 1
-                for hit in results:
-                    print("\n------------------ RISULTATO ", count, "SU ", totale, "TOTALI ------------------\n\n")
-                    print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
-                          f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
-                    spostamento = input("-premere 1 per passare al prossimo risultato\n-premere 2 per tornare al menù\n")
-                    if spostamento == '1':
-                        count += 1
-                        continue
-                    elif spostamento == '2':
-                        break
-                    else:
-                        print("tasto non disponibile...")
-                if count == totale + 1:
-                    print("LISTA FINITA...\n")
-                print("ritorno al menù...\n")
+        if not os.path.exists(self._index_dir):
+            print("The index doesn't exist, first you need to create one\n")
+        else:
+            ix = index.open_dir(self._index_dir)
+            with ix.searcher(weighting=Inverted_index.models[m_choice]) as s:
+                og = qparser.OrGroup.factory(0.9)
+                parser = MultifieldParser(
+                    ['title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk'],
+                    schema=Inverted_index.schema, group=og)
+                parsed_q = parser.parse(query)
+                numb_review = FieldFacet("number_reviews", reverse=True)
+                scores = ScoreFacet()
+                results = s.search(parsed_q, sortedby=[scores,numb_review])
+                # results.formatter = UppercaseFormatter(between="\n")
+                totale = len(results)
+                if totale == 0:
+                    print("\nNo results found\n")
+                else:
+                    count = 1
+                    for hit in results:
+                        print("\n------------------ RISULTATO ", count, "SU ", totale, "TOTALI ------------------\n\n")
+                        print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
+                            f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
+                        spostamento = input("-premere 1 per passare al prossimo risultato\n-premere 2 per tornare al menù\n")
+                        if spostamento == '1':
+                            count += 1
+                            continue
+                        elif spostamento == '2':
+                            break
+                        else:
+                            print("tasto non disponibile...")
+                    if count == totale + 1:
+                        print("LISTA FINITA...\n")
+                    print("ritorno al menù...\n")
