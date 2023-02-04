@@ -4,7 +4,8 @@ index = Inverted_index('indicizzazione')
 model = 'BM25'
 while True:
     print('----------------------------------')
-    print("Menù:\n-Premere 1 per scrivere una query\n-Premere 2 per cambiare modello\n-Premere 3 per uscire")
+    print("Menù:\n-Premere 1 per scrivere una query\n-Premere 2 per cambiare modello\n-Premere 3 per creare un nuovo indice")
+    print("-Premere 4 per indicizzare dei documenti\n-Premere 5 per uscire")
     print('----------------------------------')
     scelta = input('Scelta: ')
     if scelta == '1':
@@ -22,6 +23,11 @@ while True:
         else:
             print('Modello non presente\n')
     elif scelta == '3':
+        index.create_index()
+    elif scelta == '4':
+        num_ind = int(input('Inserire il numero di documenti che vuoi indicizzare: '))
+        index.index_documents(num_ind)
+    elif scelta == '5':
         print("\nUscita in corso...")
         break
     else:
