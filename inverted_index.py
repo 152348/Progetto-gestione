@@ -1,4 +1,5 @@
-from whoosh.fields import Schema, TEXT, ID
+from whoosh.fields import Schema, TEXT, ID, COLUMN
+from whoosh.columns import NumericColumn
 from whoosh.analysis import StemmingAnalyzer
 import os, os.path
 from whoosh import index
@@ -7,7 +8,8 @@ from whoosh.qparser import MultifieldParser
 from whoosh import qparser
 from whoosh import scoring
 from sentiment import sentiment_analysis
-from whoosh.highlight import UppercaseFormatter
+import pickle
+from whoosh.sorting import ScoreFacet, FieldFacet
 
 
 class Inverted_index():
@@ -17,7 +19,9 @@ class Inverted_index():
                     review=TEXT(analyzer=StemmingAnalyzer(), stored=True),
                     sentiment_roberta=ID(stored=True),
                     sentiment_amazon=ID(stored=True),
-                    sentiment_nltk=ID(stored=True))
+                    sentiment_nltk=ID(stored=True),
+                    number_reviews=COLUMN(NumericColumn("i"))
+                    )
     
     models = {'TF_IDF':scoring.TF_IDF(), 'BM25':scoring.BM25F(), 'Frequency':scoring.Frequency()}
                     
@@ -44,6 +48,8 @@ class Inverted_index():
         else:
             ix = index.open_dir(self._index_dir)
             writer = ix.writer()
+            with open('User_count.pkl', 'rb') as us:
+                reviews_count = pickle.load(us)
 
             try:
                 with open('csv_count.txt', 'x') as number:
@@ -63,7 +69,7 @@ class Inverted_index():
                     sentiments = sentiment_analysis(line['Text'])
                     writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'], 
                     _stored_review=line['Text'], sentiment_roberta=sentiments[0], sentiment_amazon = sentiments[1],
-                    sentiment_nltk=sentiments[2])
+                    sentiment_nltk=sentiments[2], number_reviews = reviews_count[line['User']])
                     csv_counter += 1
                     break_counter +=1
                     with open('csv_count.txt', 'w') as number:
@@ -83,7 +89,9 @@ class Inverted_index():
                 ['title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk'],
                 schema=Inverted_index.schema, group=og)
             parsed_q = parser.parse(query)
-            results = s.search(parsed_q, terms=True)
+            numb_review = FieldFacet("number_reviews", reverse=True)
+            scores = ScoreFacet()
+            results = s.search(parsed_q, sortedby=[scores,numb_review])
             # results.formatter = UppercaseFormatter(between="\n")
             totale = len(results)
             if totale == 0:
