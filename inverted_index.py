@@ -96,13 +96,9 @@ class Inverted_index():
                     ['title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk'],
                     schema=Inverted_index.schema, group=og)
                 parsed_q = parser.parse(query)
-                print(parsed_q)
                 numb_review = FieldFacet("number_reviews", reverse=True)
                 scores = ScoreFacet()
                 results = s.search(parsed_q, sortedby=[scores,numb_review])
-                if len(results) == 0:
-                    yield None
-                else:
-                    print("Eseguito\n")
-                    for hit in results:
-                        yield hit
+                yield len(results)
+                for hit in results:
+                    yield hit
