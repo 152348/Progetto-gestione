@@ -30,12 +30,12 @@ class Inverted_index():
     models = {'TF_IDF':scoring.TF_IDF(), 'BM25':scoring.BM25F(), 'Frequency':scoring.Frequency()}
                     
     def __init__(self, index_dir):
-        """Inizializzatore a cui deve essere passato il nome della directory 
-            in cui creare o aprire l'inverted index"""
+        """Initializer, it takes the name of the directory,
+        in which to create or open the inverted index, as an argument"""
         self._index_dir = index_dir
 
     def create_index(self):
-        """Metodo che si occupa di creare l'inverted index con i campi
+        """Method that create the inverted index, with the fields specified by the variable schema"""
             specificati dalla variabile schema"""
         if not os.path.exists(self._index_dir):
             os.mkdir(self._index_dir)
@@ -43,10 +43,10 @@ class Inverted_index():
         index.create_in(self._index_dir, Inverted_index.schema)
 
     def index_documents(self, n_break=-1):
-        """Metodo che si occupa di indicizzare i documenti contenuti nel file csv "Reviews_MAL.csv". Essendo
-        un'operazione lunga, è possibile passare come parametro il numero di documenti da indicizzare
-        per questa iterazione del metodo (oppure -1 per indicizzarli tutti in una volta). Il metodo non 
-        riparte ogni volta dalla prima recensione ma salva in un file a quale recensione era arrivato."""
+        """Method for indexing the documents contained in csv file Reviews_MAL.csv. This can be a long operation,
+        so it's possible to pass as argument, the number of documents to index in this iteration of the method
+        (or -1 to index all the file). It saves in a file the position of the last review indexed,
+        so the next time it runs, it starts from there and not from the beginning of the file"""
         if not os.path.exists(self._index_dir):
             print("The index doesn't exist, first you need to create one\n")
         else:
@@ -84,8 +84,7 @@ class Inverted_index():
             writer.commit(optimize=True)
 
     def search(self, query, m_choice):
-        """Metodo che si occupa di parsare la query passata come parametro dall'utente, cercarla e
-           stampare i risultati"""
+        """Method that parse the query(passed as argument), searches and prints the results"""
         if not os.path.exists(self._index_dir):
             print("The index doesn't exist, first you need to create one\n")
         else:
