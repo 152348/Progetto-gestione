@@ -11,12 +11,13 @@ while True:
     if choice == '1':
         query = input("\nEnter the query...\n")
         results = index.search(query, model)
-        if results is None:
-            print("\n No results found\n")
+        length = next(results)
+        if length == 0:
+            print("\nNo results found\n")
         else:
             count = 1
             for hit in results:
-                print("\n------------------ RESULT ", count, "OUT OF 10 TOP DOCUMENTS ------------------\n\n")
+                print("\n------------------ RESULT ", count, " OUT OF ",length," ------------------\n\n")
                 print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
                     f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
                 spostamento = input("-Press 1 to proceed to the next result\n-Press 2 to return to the menù\n")
