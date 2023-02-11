@@ -91,21 +91,30 @@ while True:
             print("Query not available")
             continue
         print(bench_query[q_choice])
+        dcg_choice = input("Do you want to calculate the DCG?: ").lower()
+        if dcg_choice == 'yes':
+            dcg_choice = True
+        elif dcg_choice == 'no':
+            dcg_choice = False
+        else:
+            print("\nChoice not supported... DCG will not be calculated")
+            dcg_choice = False
         results = index.search(bench_query[q_choice], 'BM25')
         length = next(results)
         count = 1
         relevances = []
         for hit in results:
             hit_print(hit, count, length)
-            try:
-                relevance = int(input("\nWhat relevance do you think this result has with regards to the UIN " 
-                "on a scale of 1 to 3?: "))
-            except ValueError:
-                print("Incorrect relevance value, exiting the benchark...\n")
-                continue
-            if relevance < 1 or relevance > 3:
-                print("Incorrect relevance value, exiting the benchmark...\n")
-            relevances.append(relevance)
+            if dcg_choice:
+                try:
+                    relevance = int(input("\nWhat relevance do you think this result has with regards to the UIN " 
+                    "on a scale of 1 to 3?: "))
+                except ValueError:
+                    print("Incorrect relevance value, exiting the benchark...\n")
+                    continue
+                if relevance < 1 or relevance > 3:
+                    print("Incorrect relevance value, exiting the benchmark...\n")
+                relevances.append(relevance)
             spostamento = input("\n-Press 1 to proceed to the next result\n-Press 2 to return to the menù\n")
             if spostamento == '1':
                 count += 1
@@ -115,11 +124,12 @@ while True:
                 break
             else:
                 count += 1
-                print("Key not available...")
+                print("Key not available...\n")
                 break
         if count >= 11:
-            DCG = DCG_calc(relevances)
-            print("\nEnd of list..\nThe DCG is:", DCG)
+            print("\nEnd of list..")
+            if dcg_choice:
+                print("\nThe DCG is", DCG_calc(relevances))
         print("\nReturning to the menù...")
     elif choice == '6':
         print("\nExiting...")
