@@ -6,36 +6,33 @@ from nltk.stem.porter import PorterStemmer
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 
-# nltk.download()   # serve per scaricare alcuni pacchetti di nltk che servono, ti viene scritto sul terminale quali ti servono
-# principali: names, stopwords, state_union, twitter_samples, movie_reviews, averaged_perceptron_tagger, vader_lexicon, punkt, vader_lexicon
-# link da seguire https://realpython.com/python-nltk-sentiment-analysis/
-# usiamo NLTK per fare la sentiment analysis
-# da quello che vedo, bisogna guardare il valore di compound per capire il sentimeno, è complicato
+# nltk.download()   # remove comment, if you need to dowload certain nltk packages
+# main packages: names, stopwords, state_union, twitter_samples, movie_reviews, averaged_perceptron_tagger, vader_lexicon, punkt, vader_lexicon
 def nltk_sentiment(string):
-    analyzer = SentimentIntensityAnalyzer()  # analizzatore base di nltk
+    """function for using ntlk sentiment analysis"""
+    analyzer = SentimentIntensityAnalyzer()  # nltk base analyzer
     sentiment = analyzer.polarity_scores(string)
     if (sentiment['compound'] < 0):
-        risultato = "negativa"
+        result = "negative"
     else:
         if (sentiment['neu'] > 0.770):
-            risultato = "neutrale"
+            result = "neutral"
         else:
-            risultato = "positiva"
-    return risultato
+            result = "positive"
+    return result
 
 
-# funzione generale che fa partire la sentiment di un modello in tutti gli 8 modi
-# si potrebbe eseguire anche lo splitting con tutte le tokenizzazioni diverse, ma attualmente mi sembra ci siano già troppi print da leggere.
 def extraction(string, model_name):
+    """general function that extracts model and tokenizer, from the model name(argument) and pass them to one of the two methods for analyzing sentiment"""
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     sentiment = splitting(string, tokenizer, model)
-    # sentiment = truncation(string, tokenizer, model)
+    # sentiment = truncation(string, tokenizer, model)  # remove comment if you want to analyze sentiment through the truncation method
     return sentiment
 
 
-# # risultato di sentiment attraverso il troncamento, il modello dipende da quello che gli viene passato
 # def truncation(string, tokenizer, model):
+#     """method of sentiment analysis that use the truncate the string if it exceeds the 512 tokens, the model and tokenizer are passed as arguments"""
 #     inputs = tokenizer(string, truncation=True, max_length=512, return_tensors="pt")
 #     with torch.no_grad():
 #         logits = model(**inputs).logits
@@ -45,12 +42,13 @@ def extraction(string, model_name):
 #     return model.config.id2label[predicted_class_id_1]  # funzione per ottenere il nome(stringa) del sentimento dall'ID
 
 
-# risultato di sentiment attraverso lo splitting, il modello dipende da quello che gli viene passato
 def splitting(string, tokenizer, model):
+    """method of sentiment analysis that splits the string in chunks of 512 tokens and analyze the sentiment in each one of them,
+    then it takes the average sentiment and return it. The model and tokenizer are passed as arguments"""
     tokens = tokenizer.encode_plus(string, add_special_tokens=False, return_tensors='pt')
     input_id_chunks = tokens['input_ids'][0].split(510)
     mask_chunks = tokens['attention_mask'][0].split(510)
-    input_id_chunks = list(input_id_chunks)  # cambio in lista, perchè normalmente sono tuple
+    input_id_chunks = list(input_id_chunks)
     mask_chunks = list(mask_chunks)
     for i in range(len(input_id_chunks)):
         #  this is for adding the input_ids for start and finish sequence, and for mask_ids
@@ -71,29 +69,24 @@ def splitting(string, tokenizer, model):
             mask_chunks[i] = torch.cat([
                 mask_chunks[i], torch.Tensor([0] * pad_len)
             ])
-    # nello splitting usiamo le funzioni di torch, non ho ben capito perchè
-    # queste tre righe mi servono per avere un dizionario con il tensor dentro(simile al troncamento),
-    # che dovremo estrarre per ottenere i valori e farci la media
+    # we need these 3 lines to convert the chunks into a dictionary so we can extract the values and find the average value.
     input_ids = torch.stack(input_id_chunks)
     attention_mask = torch.stack(mask_chunks)
     input_dict = {
         'input_ids': input_ids.long(),
         'attention_mask': attention_mask.int()
     }
-    outputs = model(**input_dict)  # stessa cosa del troncamento
-    probs = torch.nn.functional.softmax(outputs[0], dim=-1)  # estrazione dei tensor
-    mean = probs.mean(
-        dim=0)  # fa la media dei valori dentro ai tensor, se ne abbiamo più di uno(caso in cui testo ha più di 512 token)
-    # queste di seguito sono uguali al troncamento
+    outputs = model(**input_dict)
+    probs = torch.nn.functional.softmax(outputs[0], dim=-1)
+    mean = probs.mean(dim=0)
     predicted_class_id_1 = torch.argmax(mean).item()
     return model.config.id2label[predicted_class_id_1]
 
 
-# preso spunto dalla funzione "index_documents" per la lettura del file csv,
-# il resto sono print che verrano tolti in futuro e le chiamate delle funzioni
 def sentiment_analysis(string):
-    sentimento = [extraction(string, "j-hartmann/emotion-english-distilroberta-base"),
-                  extraction(string, "LiYuan/amazon-review-sentiment-analysis"),
-                  nltk_sentiment(string)]
-    # ritorna una lista con i sentimenti dei vari modelli -> [roBERTa, ARSA, NLTK]
-    return sentimento
+    """general function that will be called from the inverted_index file.
+    it takes the review(as argument) and proceed to analyze sentiment with 3 different models(roBERTa, ARSA, NLTK)"""
+    sentiment = [extraction(string, "j-hartmann/emotion-english-distilroberta-base"),
+                 extraction(string, "LiYuan/amazon-review-sentiment-analysis"),
+                 nltk_sentiment(string)]
+    return sentiment

@@ -13,7 +13,6 @@ from whoosh.sorting import ScoreFacet, FieldFacet
 
 
 class Inverted_index():
-
     schema = Schema(title=ID(stored=True),
                     user=ID(stored=True),
                     review=TEXT(analyzer=StemmingAnalyzer(), stored=True),
@@ -22,27 +21,25 @@ class Inverted_index():
                     sentiment_nltk=ID(stored=True),
                     number_reviews=COLUMN(NumericColumn("i"))
                     )
-    
-    models = {'TF_IDF':scoring.TF_IDF(), 'BM25':scoring.BM25F(), 'Frequency':scoring.Frequency()}
-                    
+
+    models = {'TF_IDF': scoring.TF_IDF(), 'BM25': scoring.BM25F(), 'Frequency': scoring.Frequency()}
+
     def __init__(self, index_dir):
-        """Inizializzatore a cui deve essere passato il nome della directory 
-            in cui creare o aprire l'inverted index"""
+        """Initializer, it takes the name of the directory, in which to create or open the inverted index, as an argument"""
         self._index_dir = index_dir
 
     def create_index(self):
-        """Metodo che si occupa di creare l'inverted index con i campi
-            specificati dalla variabile schema"""
+        """Method that create the inverted index, with the fields specified by the variable schema"""
         if not os.path.exists(self._index_dir):
             os.mkdir(self._index_dir)
 
         index.create_in(self._index_dir, Inverted_index.schema)
 
     def index_documents(self, n_break=-1):
-        """Metodo che si occupa di indicizzare i documenti contenuti nel file csv Reviews_MAL.csv. Essendo
-        un'operazione lunga, è possibile passare come parametro il numero di documenti da indicizzare
-        per questa iterazione del metodo (oppure -1 per indicizzarli tutti in una volta). Il metodo non 
-        riparte ogni volta dalla prima recensione ma salva in un file a quale recensione era arrivato."""
+        """Method for indexing the documents contained in csv file Reviews_MAL.csv. This can be a long operation,
+        so it's possible to pass as argument, the number of documents to index in this iteration of the method
+        (or -1 to index all the file). It saves in a file the position of the last review indexed,
+        so the next time it runs, it starts from there and not from the beginning of the file"""
         if not os.path.exists(self._index_dir):
             print("The index doesn't exist, first you need to create one\n")
         else:
@@ -67,11 +64,12 @@ class Inverted_index():
                     next(df)
                 for line in df:
                     sentiments = sentiment_analysis(line['Text'])
-                    writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'], 
-                    _stored_review=line['Text'], sentiment_roberta=sentiments[0], sentiment_amazon = sentiments[1],
-                    sentiment_nltk=sentiments[2], number_reviews = reviews_count[line['User']])
+                    writer.add_document(title=line['Title'].lower(), user=line['User'], review=line['Text'],
+                                        _stored_review=line['Text'], sentiment_roberta=sentiments[0],
+                                        sentiment_amazon=sentiments[1],
+                                        sentiment_nltk=sentiments[2], number_reviews=reviews_count[line['User']])
                     csv_counter += 1
-                    break_counter +=1
+                    break_counter += 1
                     with open('csv_count.txt', 'w') as number:
                         number.write(str(csv_counter))
                     if n_break != -1 and break_counter == n_break:
@@ -80,8 +78,7 @@ class Inverted_index():
             writer.commit(optimize=True)
 
     def search(self, query, m_choice):
-        """Metodo che si occupa di parsare la query passata come parametro dall'utente, cercarla e
-           stampare i risultati"""
+        """Method that parse the query(passed as argument), searches and prints the results"""
         if not os.path.exists(self._index_dir):
             print("The index doesn't exist, first you need to create one\n")
         else:
@@ -94,25 +91,25 @@ class Inverted_index():
                 parsed_q = parser.parse(query)
                 numb_review = FieldFacet("number_reviews", reverse=True)
                 scores = ScoreFacet()
-                results = s.search(parsed_q, sortedby=[scores,numb_review])
+                results = s.search(parsed_q, sortedby=[scores, numb_review])
                 # results.formatter = UppercaseFormatter(between="\n")
-                totale = len(results)
-                if totale == 0:
+                total = len(results)
+                if total == 0:
                     print("\nNo results found\n")
                 else:
                     count = 1
                     for hit in results:
-                        print("\n------------------ RISULTATO ", count, "SU ", totale, "TOTALI ------------------\n\n")
+                        print("\n------------------ REVIEW ", count, "OUT OF ", total, "TOTAL ------------------\n\n")
                         print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
-                            f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
-                        spostamento = input("-premere 1 per passare al prossimo risultato\n-premere 2 per tornare al menù\n")
-                        if spostamento == '1':
+                              f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
+                        choice = input("-press 1 to see next result\n-press 2 to return to the menu\n")
+                        if choice == '1':
                             count += 1
                             continue
-                        elif spostamento == '2':
+                        elif choice == '2':
                             break
                         else:
-                            print("tasto non disponibile...")
-                    if count == totale + 1:
-                        print("LISTA FINITA...\n")
-                    print("ritorno al menù...\n")
+                            print("key not available...")
+                    if count == total + 1:
+                        print("REACHED END OF LIST...\n")
+                    print("returning to menu...\n")

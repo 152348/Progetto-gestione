@@ -4,16 +4,16 @@ index = Inverted_index('indicizzazione')
 model = 'BM25'
 while True:
     print('----------------------------------')
-    print("Menù:\n-Premere 1 per scrivere una query\n-Premere 2 per cambiare modello\n-Premere 3 per creare un nuovo indice")
-    print("-Premere 4 per indicizzare dei documenti\n-Premere 5 per uscire")
+    print("Menu:\n-Press 1 to write a query\n-Press 2 to change model\n-Press 2 to create a new index")
+    print("-Press 4 to index documents\n-Press 5 to exit")
     print('----------------------------------')
-    scelta = input('Scelta: ')
-    if scelta == '1':
-        query = input("\nInserire la query...\n")
+    choice = input('Choice: ')
+    if choice == '1':
+        query = input("\nInsert query...\n")
         index.search(query, model)
-    elif scelta == '2':
-        print('Modelli disponibili:\n1)BM25\n2)TF_IDF\n3)Frequency')
-        n_model = input('\nInserire il numero del modello: ')
+    elif choice == '2':
+        print('Available models:\n1)BM25\n2)TF_IDF\n3)Frequency')
+        n_model = input('\nEnter the model number: ')
         if n_model == '1':
             model = 'BM25'
         elif n_model == '2':
@@ -21,14 +21,14 @@ while True:
         elif n_model == '3':
             model = 'Frequency'
         else:
-            print('Modello non presente\n')
-    elif scelta == '3':
+            print('Model not present\n')
+    elif choice == '3':
         index.create_index()
-    elif scelta == '4':
-        num_ind = int(input('Inserire il numero di documenti che vuoi indicizzare: '))
+    elif choice == '4':
+        num_ind = int(input('Enter the number of documents you want to index: '))
         index.index_documents(num_ind)
-    elif scelta == '5':
-        print("\nUscita in corso...")
+    elif choice == '5':
+        print("\nExit in progress...")
         break
     else:
-        print("\nTasto non disponibile...")
+        print("\nKey not available...")
