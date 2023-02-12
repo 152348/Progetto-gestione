@@ -33,10 +33,10 @@ bench_query = ["title:naruto AND sentiment_amazon:[\'3 stars\' TO \'5 stars\']",
 "user:abystoma? AND sentiment_amazon:\'5 stars\'", "(review:magic review:elves) AND sentiment_nltk:neutral"]
 
 while True:
-    print('----------------------------------')
+    print('-------------------------------------')
     print("Menù:\n-Press 1 to write a query\n-Press 2 to change model\n-Press 3 to create a new index")
     print("-Press 4 to index some documents\n-Press 5 to try the benchmark queries\n-Press 6 to exit")
-    print('----------------------------------')
+    print('-------------------------------------')
     choice = input('Choice: ')
     if choice == '1':
         query = input("\nEnter the query...\n")
@@ -111,9 +111,10 @@ while True:
                     "on a scale of 1 to 3?: "))
                 except ValueError:
                     print("Incorrect relevance value, exiting the benchark...\n")
-                    continue
+                    break
                 if relevance < 1 or relevance > 3:
                     print("Incorrect relevance value, exiting the benchmark...\n")
+                    break
                 relevances.append(relevance)
             spostamento = input("\n-Press 1 to proceed to the next result\n-Press 2 to return to the menù\n")
             if spostamento == '1':
@@ -132,7 +133,7 @@ while True:
                 print("\nThe DCG is", DCG_calc(relevances))
         print("\nReturning to the menù...")
     elif choice == '6':
-        print("\nExiting...")
+        print("Exiting...")
         break
     else:
         print("\nKey not available...") 
