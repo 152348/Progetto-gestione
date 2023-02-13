@@ -34,9 +34,9 @@ model = 'BM25'
 
 bench_uin = ["I want to find all the reviews about the manga \'naruto\' that have from 3 stars to 5 stars",
 "I want to find the reviews about a manga whose name I remember starts with \'Dra\' and is about fighting," 
-"the protagonist's name is goku, he has a tail and can transform", "I want to find all the reviews about"
-"\'Chainsaw man\' that are either written by \'skylucario\' or that are negative", "I want to find reviews" 
-"about alchemy-themed mangas aside from \'fullmetal alchemist\' which I already read", "I want to find" 
+"the protagonist's name is goku, he has a tail and can transform", "I want to find all the reviews about "
+"\'Chainsaw man\' that are either written by \'skylucario\' or that are negative", "I want to find reviews " 
+"about alchemy-themed mangas aside from \'fullmetal alchemist\' which I already read", "I want to find " 
 "reviews about historical mangas, especially about samurais", "I want to find all reviews about \'fairy tail\'" 
 "that communicate anger or sadness", "I want to find all the reviews about action mangas that are set in " 
 "either of the World War", "I want to find all the reviews about mangas that have spiders and monsters",
