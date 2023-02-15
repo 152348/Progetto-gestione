@@ -7,6 +7,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 
 
 # file che non viene usato dall'applicazione, l'abbiamo lasciato perchè qui è possibile calcolare
+# è necessario il file csv per farlo funzionare
 # la sentiment value delle recensioni utilizzando delle tokenizzazioni diverse, grazie a ciò si possono notare
 # alcune differenze, soprattutto nei risultati di roBERTa.
 # inoltre per ogni modello, vengono ritornari i primi 2 sentimenti maggiori, per vedere meglio le sottili differenze, sempre soprattutto per roBERTa
