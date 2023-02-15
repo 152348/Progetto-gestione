@@ -6,29 +6,16 @@ from nltk.stem.porter import PorterStemmer
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 
-# questo file è a sè, quindi puoi farlo partire da solo intanto per vedere i print e tutto,
-# sarà poi da modificare per finalizzarlo(togliere print e codice superfluo, ottimizzare i return,
-# riguardare tutta la parte dei commenti e pensare se tradurli in inglese).
-# Sarà infine da integrare(in inverted_index.py) o da metterci un return finale, per inserire il sentimento dentro all'inverted index
+# file che non viene usato dall'applicazione, l'abbiamo lasciato perchè qui è possibile calcolare
+# la sentiment value delle recensioni utilizzando delle tokenizzazioni diverse, grazie a ciò si possono notare
+# alcune differenze, soprattutto nei risultati di roBERTa.
+# inoltre per ogni modello, vengono ritornari i primi 2 sentimenti maggiori, per vedere meglio le sottili differenze, sempre soprattutto per roBERTa
 
-# attualmente sto usando 3 modelli(roBERTa, ARSA, NTLK), per ogni modello di Hugging face provo 2 metodi diversi(splitting e troncamento),
-# per il troncamento utilizzo 7 manipolazioni di dati differenti(anche per NLTK):
-# (base del modello, stemming, lemmatization, base di nltk, senza punteggiaturae di nltk, senza stopworde di nltk, senza entrambee di nltk)
-# e per ogni esecuzione ritorno i primi 2 sentimenti maggiori(non per NLTK).
-
-# c'è anche il codice commentato per utilizzare le varie tokenizzazioni nello splitting,
-# non lo lascio perchè c'è già molta roba da leggere e diventa pensante, se vuoi provarlo basta togliere i commenti(dentro la funzione extraction)
-
-# nomi dei modelli di Hugging face che attualemnte funzionano in extraction:
-# "j-hartmann/emotion-english-distilroberta-base"
-# "LiYuan/amazon-review-sentiment-analysis"
+# le tokenizzazioni utilizzate sono: base del modello, stemming, lemmatization, base di nltk,
+# senza punteggiaturae di nltk, senza stopworde di nltk, senza entrambe di nltk.
 
 
-# nltk.download()   # serve per scaricare alcuni pacchetti di nltk che servono, ti viene scritto sul terminale quali ti servono
-# principali: names, stopwords, state_union, twitter_samples, movie_reviews, averaged_perceptron_tagger, vader_lexicon, punkt, vader_lexicon
-# link da seguire https://realpython.com/python-nltk-sentiment-analysis/
 # usiamo NLTK per fare la sentiment analysis
-# da quello che vedo, bisogna guardare il valore di compound per capire il sentimeno, è complicato
 def nltk_sentiment(string):
     print("\nNLTK...")
     analyzer = SentimentIntensityAnalyzer()  # analizzatore base di nltk
@@ -199,8 +186,7 @@ def splitting(string, tokenizer, model):
     return [sentimento, sentimento_secondario]
 
 
-# preso spunto dalla funzione "index_documents" per la lettura del file csv,
-# il resto sono print che verrano tolti in futuro e le chiamate delle funzioni
+
 def sentiment_analysis():
     n_break = 2
     try:
@@ -225,9 +211,6 @@ def sentiment_analysis():
             sentimento = extraction(testo, "j-hartmann/emotion-english-distilroberta-base")
             sentimento = extraction(testo, "LiYuan/amazon-review-sentiment-analysis")
             sentimento = nltk_sentiment(testo)
-            # attualmente sentimento(il return dei modelli) è una lista(extraction) o dizionario(nltk_sentiment).
-            # in futuro dovremmo pensare a come lo vogliamo(se solo una stringa o altro),
-            # perchè dovremmo poi inserirlo nell'inverted index
             csv_counter += 1
             break_counter += 1
             with open('csv_count.txt', 'w') as number:
@@ -236,4 +219,4 @@ def sentiment_analysis():
                 break
 
 
-sentiment_analysis()  # chiamata di funzione principale che verrà tolta(sarà il main a chiamarla)
+sentiment_analysis()  # chiamata di funzione principale
