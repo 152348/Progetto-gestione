@@ -15,15 +15,17 @@ def hit_print(hit,position,length):
     """Function to pretty-print the results of query search. For every results, the function prints the ranking number of the 
     review out of the total reviews retrieved, the title of the manga, the user who wrote the review, the results of three 
     sentiment analysis methods performed on the reviews separated by a dash and finally the review itself"""
+
     print("\n------------------ RESULT ", position, " OUT OF ",length," ------------------\n\n")
     print(f"Title: {hit['title']}, User: {hit['user']}, Sentiments: "
             f"{hit['sentiment_roberta']} - {hit['sentiment_amazon']} - {hit['sentiment_nltk']}\nReview: {hit['review']}\n")
 
 def DCG_calc(relevances):
-    """Function that given a list of integers, calculates the Dispositioned cumulative gain using a binary logarithm. Every
+    """Function that given a list of integers, calculates the Discounted cumulative gain using a binary logarithm. Every
     relevance value is divided by the binary logarithm of the ranking position of the review it represents. The function
     assumes that the position in the list reflects the position in the ranking (so the first the value corresponds to the
     first review in the ranking and so on)"""
+    
     DCG = relevances[0]
     for i in range(1,len(relevances)):
         DCG += relevances[i] / log2(i+1)
@@ -37,15 +39,15 @@ bench_uin = ["I want to find all the reviews about the manga \'naruto\' that hav
 "the protagonist's name is goku, he has a tail and can transform", "I want to find all the reviews about "
 "\'Chainsaw man\' that are either written by \'skylucario\' or that are negative", "I want to find reviews " 
 "about alchemy-themed mangas aside from \'fullmetal alchemist\' which I already read", "I want to find " 
-"reviews about historical mangas, especially about samurais", "I want to find all reviews about \'fairy tail\'" 
+"reviews about historical mangas, especially about samurais", "I want to find all reviews about \'bleach\' " 
 "that communicate anger or sadness", "I want to find all the reviews about action mangas that are set in " 
 "either of the World War", "I want to find all the reviews about mangas that have spiders and monsters",
 "I want to read the 5 stars reviews written by the user \'abystoma\' but I don’t remember the number his username ends with",
 "I want to find reviews of mangas about magic or elves that have neutral reviews"]
 
 bench_query = ["title:naruto AND sentiment_amazon:[\'3 stars\' TO \'5 stars\']", "title:dra* AND review:fighting,goku,tail,"
-"transform", "title:\'chainsaw man\' AND (user:skylucario OR sentiment_nltk:negative)", "NOT title:\'fullmetal alchemist\'" 
-"AND review:alchemy AND" "NOT review:\'fullmetal alchemist\'", "review:historical^2,samurai", "title:\'fairy tail\' AND" 
+"transform", "title:\'chainsaw man\' AND (user:skylucario OR sentiment_nltk:negative)", "NOT title:\'fullmetal alchemist\' " 
+"AND review:alchemy AND NOT review:\'fullmetal alchemist\'", "review:historical^2,samurai", "title:bleach AND " 
 "(sentiment_roberta:anger sentiment_roberta:sadness)", "review:(action AND \"world war\")", "review:spiders AND monsters",
 "user:abystoma? AND sentiment_amazon:\'5 stars\'", "(review:magic review:elves) AND sentiment_nltk:neutral"]
 

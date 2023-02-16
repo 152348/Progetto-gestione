@@ -1,6 +1,8 @@
 import csv
 import pickle
 def count():
+    """Simple function dad iterates through the file "Reviews_MAL.csv" and saves in dictionary the number of
+    reviews written by every user. It then saves the dictionary to a pickle file"""
     user_c = {}
     with open ('Reviews_MAL.csv', 'r', encoding='utf8') as rev:
         df = csv.DictReader(rev)
