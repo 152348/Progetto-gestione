@@ -12,7 +12,8 @@ Questa applicazione utilizza 3 diversi modelli di information retrival: BM25, TF
 Di default si usa il modello BM25, ma e' possibile cambiarlo (in base al modello scelto, le query potrebbero dare risultati differenti).
 
 Eseguire il main per fare partire l'applicazione assicurandosi di essere all'interno della cartella con i vari file python e la cartella 'index'.
-L'applicazione presenta un menu' testuale dove ci sono 6 opzioni tra cui scegliere (per scegliere bisogna inserire il numero relativo all'opzione che si vuole eseguire e premere invio).
+L'applicazione presenta un menu' testuale dove ci sono 6 opzioni tra cui scegliere (per scegliere bisogna inserire il numero relativo all'opzione 
+che si vuole eseguire e premere invio).
 Le opzioni permettono di creare un indice, indicizzare documenti dal file csv, scrivere query e cambiare modello di information retrival.
 
 Per eseguire le query di benchmark è stata creata una opzione (la quinta) apposta per semplificare il processo; basta seguire l'indicazioni scritte dal menù.
