@@ -23,17 +23,28 @@ Questa applicazione utilizza 3 diversi modelli per calcolare la sentiment value 
 Questa applicazione utilizza 3 diversi modelli di information retrival: BM25, TF_IDF, Frequency.
 Di default si usa il modello BM25, ma e' possibile cambiarlo (in base al modello scelto, le query potrebbero dare risultati differenti).
 
+LINGUAGGIO DI QUERY:
+Per fare ricerce e' sufficiente inserire uno o piu' campi fra 'title', 'user', 'review', 'sentiment_roberta', 'sentiment_amazon', 'sentiment_nltk', seguiti 
+da due punti e una serie di valori. E' possibile utilizzare operatori booleani (altrimenti tra i vari campi specificati verra' implicitamente inserito un OR), 
+e' possibile specificare un certo ordine utilizzando parentesi tonde e sono supportate anche wildcard, boost di un certo valore usando il carattere '^' seguito 
+da un numero e le phrase query (tenendo conto pero' che viene applicato stemming ed eliminazione delle stopwords quindi il risultato potrebbe essere diverso da quanto 
+previsto).
+N.B.: se nessun campo viene specificato per un valore, allora quest'ultimo verra' cercato su tutti i campi.
+
 ESECUZIONE BENCHMARK:
 Per eseguire le query di benchmark è stata creata una opzione (la quinta) apposta per semplificare il processo; basta seguire l'indicazioni scritte dal menù.
 Inoltre c'è anche la possibilità di calcolare il DCG delle query di benchmark, in fondo al readme ci saranno comunque i DCG calcolati da noi.
 
-DCG calcoalti da noi:
+DCG CALCOLATI DA NOI:
+La nostra scala di valori va da 1 a 3 quindi si passa da un punteggio minimo di 0 ad un punteggio massimo di 15.763483535311375. Inoltre per ogni query abbiamo
+preso in considerazione solo i primi 10 risultati del ranking.
+
 1) 15.061165851291104
-2) 11.639918777112372(in una ho messo 1, mentre gabriel 2)
-3) 9.348837372816664(in una ho messo 1, mentre gabriel 2 e in una ho messo 3, mentre gabriel 1)
-4) 11.580110714822036(in una ho messo 2, mentre gabriel 1)
-5) 14.127548384512831(in una ho messo 3, mentre gabriel 2)
-6) 9.865282106390543(in una ho messo 2, mentre gabriel 3)
+2) 11.639918777112372
+3) 9.348837372816664
+4) 11.580110714822036
+5) 14.127548384512831
+6) 9.865282106390543
 7) 9.883064667196543
 8) 12.675569794465977
 9) 14.317088904954188
