@@ -1,29 +1,29 @@
 1)UIN:"I want to find all the reviews about the manga 'naruto' that have from 3 stars to 5 stars"
 QUERY:title:naruto AND sentiment_amazon:['3 stars' TO '5 stars']
 
-2)UIN:"I want to find the reviews about a manga whose name I remember starts with 'Dra' and is about fighting, the protagonist's name is goku, he has a tail and can transform”
+2)UIN:"I want to find the reviews about a manga whose name I remember starts with 'Dra' and is about fighting, the protagonist's name is goku, he has a tail and can transform"
 QUERY:title:dra* AND review:fighting,goku,tail,transform
 
 3)UIN:"I want to find all the reviews about 'Chainsaw man' that are either written by 'skylucario' or that are negative"
 QUERY:title:'chainsaw man' AND (user:skylucario OR sentiment_nltk:negative)
 
 4)UIN:"I want to find reviews about alchemy-themed mangas aside from 'fullmetal alchemist' which I already read"
-QUERY:NOT title:'fullmetal alchemist' AND review:alchemy AND NOT review:’fullmetal alchemist’
+QUERY:NOT title:'fullmetal alchemist' AND review:alchemy AND NOT review:'fullmetal alchemist'
 
-5)UIN:”I want to find reviews about historical mangas, especially about samurais”.
+5)UIN:"I want to find reviews about historical mangas, especially about samurais".
 QUERY:review:historical^2,samurai
 
-6)UIN:”i want to find all reviews about ‘bleach’ that communicate anger or sadness”
-QUERY:title:"bleach" AND (sentiment_roberta:anger sentiment_roberta:sadness)
+6)UIN:"i want to find all reviews about 'bleach' that communicate anger or sadness"
+QUERY:title:bleach AND (sentiment_roberta:anger sentiment_roberta:sadness)
 
-7)UIN:”I want to find all the reviews about action mangas that are set in either of the World War”
-QUERY:review:(action AND “world war”)
+7)UIN:"I want to find all the reviews about action mangas that are set in either of the World War"
+QUERY:review:(action AND "world war")
 
-8)UIN:”I want to find all the reviews about mangas that have spiders and monsters”
+8)UIN:"I want to find all the reviews about mangas that have spiders and monsters"
 QUERY:review:spiders AND monsters
 
-9)UIN:”I want to read the 5 stars reviews written by the user ‘abystoma’ but I don’t remember the number his username ends with”
-QUERY:user:abystoma? AND sentiment_amazon:’5 stars’
+9)UIN:"I want to read the 5 stars reviews written by the user 'abystoma' but I don’t remember the number his username ends with"
+QUERY:user:abystoma? AND sentiment_amazon:'5 stars'
 
-10)UIN:”I want to find reviews of mangas about magic or elves that have neutral reviews”
+10)UIN:"I want to find reviews of mangas about magic or elves that have neutral reviews"
 QUERY:(review:magic review:elves) AND sentiment_nltk:neutral
