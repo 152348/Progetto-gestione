@@ -28,9 +28,9 @@ LINGUAGGIO DI QUERY:
 Per fare ricerce e' sufficiente inserire uno o piu' campi fra 'title', 'user', 'review', 'sentiment_roberta', 
 'sentiment_amazon', 'sentiment_nltk', seguiti da due punti e una serie di valori. E' possibile utilizzare operatori 
 booleani (altrimenti tra i vari campi specificati verra' implicitamente inserito un OR), e' possibile specificare un 
-certo ordine utilizzando parentesi tonde e sono supportate anche wildcard, boost di un certo valore usando il carattere '^' seguito 
-da un numero e le phrase query (tenendo conto pero' che viene applicato stemming ed eliminazione delle stopwords quindi 
-il risultato potrebbe essere diverso da quanto previsto).
+certo ordine utilizzando parentesi tonde e sono supportate anche wildcard, boost di un certo valore usando 
+il carattere '^' seguito da un numero e le phrase query (tenendo conto pero' che viene applicato stemming ed 
+eliminazione delle stopwords quindi il risultato potrebbe essere diverso da quanto previsto).
 N.B.: se nessun campo viene specificato per un valore, allora quest'ultimo verra' cercato su tutti i campi.
 
 ESECUZIONE BENCHMARK:
