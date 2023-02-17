@@ -34,8 +34,8 @@ eliminazione delle stopwords quindi il risultato potrebbe essere diverso da quan
 N.B.: se nessun campo viene specificato per un valore, allora quest'ultimo verra' cercato su tutti i campi.
 
 ESECUZIONE BENCHMARK:
-Per eseguire le query di benchmark è stata creata una opzione (la quinta) apposta per semplificare il processo; 
-basta seguire l'indicazioni scritte dal menù. Inoltre c'è anche la possibilità di calcolare il DCG delle 
+Per eseguire le query di benchmark e' stata creata una opzione (la quinta) apposta per semplificare il processo; 
+basta seguire l'indicazioni scritte dal menu'. Inoltre c'e' anche la possibilita' di calcolare il DCG delle 
 query di benchmark, in fondo al readme ci saranno comunque i DCG calcolati da noi.
 
 DCG CALCOLATI DA NOI:
