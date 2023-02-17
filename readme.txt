@@ -40,7 +40,8 @@ query di benchmark, in fondo al readme ci saranno comunque i DCG calcolati da no
 
 DCG CALCOLATI DA NOI:
 La nostra scala di valori va da 1 a 3 quindi si passa da un punteggio minimo di 0 ad un punteggio massimo di 15.763483535311375. 
-Inoltre per ogni query abbiamo preso in considerazione solo i primi 10 risultati del ranking.
+Inoltre le query sono state eseguite con il modello BM25 e per ognuna di esse, abbiamo preso in considerazione solo i primi 
+10 risultati del ranking.
 
 1) 15.061165851291104
 2) 11.639918777112372
@@ -52,3 +53,15 @@ Inoltre per ogni query abbiamo preso in considerazione solo i primi 10 risultati
 8) 12.675569794465977
 9) 14.317088904954188
 10)12.049731333863209
+
+In generale da questo benchmark si puo' evincere come il motore di ricerca sia bravo a restituire documenti
+rilevanti in campi in cui non sono necessarie analisi approfondite come per esempio il titolo o l'utente, dove
+basta confrontare i nomi inseriti con quelli del documento (e il sistema si rileva efficace anche quando
+vengono coinvolte wildcard). Quando, invece, vengono eseguite richieste su campi che coinvolgono il contenuto
+della recensione o le emozioni espresse, il punteggio può variare. In particolare possiamo notare diminuzioni
+sensibili del punteggio quando vengono richieste emozioni specifiche come rabbia o tristezza (query 6 del benchmark),
+giudizi specifici sulle recensioni come solo neutralita' o negativita'(query 3 e 10) oppure quando combiniamo diversi
+argomenti che deve contenere la recensioni come 'azione' e 'Guerra mondiale' (query 7). Possiamo notare infine
+come questi punteggi differenti siano influenzati dalla tecniche di sentiment analysis utilizzate (i DCG
+di query che usano nltk sono generalmente inferiori) ma anche dove si usa lo stesso metodo (query 1 e 9),
+piu' il giudizio richiesto e' specifico e piu' il punteggio si abbassa.
